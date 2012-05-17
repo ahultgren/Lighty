@@ -1,0 +1,29 @@
+{
+  "name": "jquery.lighty",
+  "title": "jq Lighty",
+  "description": "AJAX driven lightbox",
+  "version": "0.0.1",
+  "homepage": "",
+  "author": {
+    "name": "Andreas Hultgren",
+    "email": "me@andreashultgren.se",
+    "url": "http://andreashultgren.se"
+  },
+  "repository": {
+    "type": "git",
+    "url": "none"
+  },
+  "bugs": {
+    "url": ""
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "/blob/master/LICENSE-MIT"
+    }
+  ],
+  "dependencies": {
+    "jquery": "~1.5"
+  },
+  "keywords": []
+}
