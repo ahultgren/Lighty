@@ -19,7 +19,7 @@ module.exports = function(grunt) {
     },
     min: {
       dist: {
-        src: ['<banner:meta.banner>', '<config:concat.dist.dest>'],
+        src: ['<banner:meta.banner>', '<config:concat.dist.dest>', 'src/jquery.lighty.js'],
         dest: 'dist/<%= pkg.name %>.min.js'
       }
     },
