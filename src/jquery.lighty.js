@@ -23,10 +23,13 @@
 			},
 			prefix: 'lighty-',
 			itemTemplate: function(data){
-				var contents = '<img src="' + data[0].the_post_thumbnail[0] + '" />'
-					+ '<p class="desc">' + data[0].the_excerpt + '</p>';
+				var contents = '<img src="' + data[0].the_post_thumbnail[0] + '" />' + '<p class="desc">' + data[0].the_excerpt + '</p>';
 				
-				return contents;
+				return {
+					markup: contents,
+					width: data[0].the_post_thumbnail[1],
+					height: data[0].the_post_thumbnail[2]
+				};
 			}
 		},
 		bg,
@@ -38,7 +41,8 @@
 		// Show bg and loading icon
 		bg.show();
 		container
-			.append('<div class="lighty-waiter"></div>')
+			.append('<div class="' + settings.prefix + 'waiter"></div>')
+			.lighty('resize', {width: 30, height: 30})
 			.show();
 
 		// Get data
@@ -52,9 +56,13 @@
 			},
 			success: function(data){
 				// Input the fetched data into template
-				container.empty().append(settings.itemTemplate.call(this, data));
+				var content = settings.itemTemplate.call(this, data);
 
-				// Remove loading icon and show content	
+				// Resize the container
+				container.lighty('resize', {width: content.width, height: content.height}, function(){
+					// Swap from loader to content
+					container.empty().append(content.markup);
+				});
 			}
 		});
 
@@ -90,7 +98,9 @@
 			container = $(document.createElement('div'))
 				.attr('id', settings.prefix + 'container')
 				.css({
-					position: 'absolute',
+					position: 'fixed',
+					left: $(window).width()/2,
+					top: $(window).height()/2,
 					'z-index': settings.baseZ + 1
 				})
 				.hide()
@@ -107,6 +117,52 @@
 				$(this).click(function(e){
 					e.preventDefault();
 					showLightbox.call(this);
+				});
+			});
+		},
+		resize: function(args, callback){
+			return this.each(function(){
+				var $window = $(window),
+					windowWidth = $window.width(),
+					windowHeight = $window.height(),
+					diff;
+
+				// Make sure args is an object
+				args = args || {};
+
+				// Make sure there's something to animate to
+				args.height = args.height || $(this).height();
+				args.width = args.width || $(this).width();
+
+				// Make sure the image is never larger than the screen
+				//## Must compensate for padding and shit...
+				if( args.width > windowWidth - 50 ){
+					diff = (windowWidth - 50) / args.width;
+					console.log("width", diff);
+					args.width *= diff;
+					args.height *= diff;
+				}
+				if( args.height > windowHeight - 100 ){
+					diff = (windowHeight - 100) / args.height;
+					console.log("height",diff);
+					args.width *= diff;
+					args.height *= diff;
+				}
+
+				// Animate to the center
+				$(this).animate({
+					width: args.width,
+					height: args.height,
+					left: windowWidth/2 - args.width/2,
+					top: windowHeight/2 - args.height/2
+				},
+				{
+					duration: 200,
+					complete: function(){
+						if( typeof callback === 'function' ){
+							callback();
+						}
+					}
 				});
 			});
 		}
