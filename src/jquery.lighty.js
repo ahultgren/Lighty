@@ -38,11 +38,17 @@
 	// Private methods
 	var showLightbox = function(){
 		var that = $(this);
+
 		// Show bg and loading icon
 		bg.show();
 		container
 			.append('<div class="' + settings.prefix + 'waiter"></div>')
-			.lighty('resize', {width: 30, height: 30})
+			.css({
+				top: that.offset().top - $(window).scrollTop,
+				left: that.offset().left,
+				width: that.width(),
+				height: that.height()
+			})
 			.show();
 
 		// Get data
@@ -52,7 +58,6 @@
 			dataType: 'json',
 			error: function(xhr, text){
 				//## errorTemplate?
-				console.log(xhr, text);
 			},
 			success: function(data){
 				// Input the fetched data into template
@@ -138,13 +143,11 @@
 				//## Must compensate for padding and shit...
 				if( args.width > windowWidth - 50 ){
 					diff = (windowWidth - 50) / args.width;
-					console.log("width", diff);
 					args.width *= diff;
 					args.height *= diff;
 				}
 				if( args.height > windowHeight - 100 ){
 					diff = (windowHeight - 100) / args.height;
-					console.log("height",diff);
 					args.width *= diff;
 					args.height *= diff;
 				}
