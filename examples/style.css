@@ -1,0 +1,87 @@
+#lighty-bg {
+	background: rgba(0,0,0,0.85);
+}
+#lighty-container {
+	background: #fff;
+	overflow: hidden;
+}
+#lighty-container img {
+	max-width: 100%;
+	max-height: 100%;
+}
+#lighty-container .desc {
+	background: rgba(0,0,0,0.7);
+	margin: 0;
+	padding: 0 10px 5px;
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	color: #fff;
+}
+.lighty-waiter {
+	background-color: #6b0c0f;
+	border-radius: 5px;
+	width: 10px;
+	height: 10px;
+	position: absolute;
+	left: 5px;
+	bottom: 5px;
+	-moz-animation: bouce 0.4s ease-out infinite alternate, move 1s linear infinite alternate;
+	-webkit-animation: bouce 0.4s ease-out infinite alternate, move 0.4s infinite alternate;
+	-o-animation: bouce 0.4s ease-out infinite alternate, move 1s linear infinite alternate;
+	-ms-animation: bouce 0.4s ease-out infinite alternate, move 1s linear infinite alternate;
+	animation: bouce 0.4s ease-out infinite alternate, move 1s linear infinite alternate;
+}
+
+@-moz-keyframes bouce {
+	to {
+		bottom: 70%;
+	}
+}
+@-webkit-keyframes bouce {
+	to {
+		bottom: 70%;
+	}
+}
+@-o-keyframes bouce {
+	to {
+		bottom: 70%;
+	}
+}
+@-ms-keyframes bouce {
+	to {
+		bottom: 70%;
+	}
+}
+@keyframes bouce {
+	to {
+		bottom: 70%;
+	}
+}
+
+@-moz-keyframes move {
+	to {
+		left: 70%;
+	}
+}
+@-webkit-keyframes move {
+	to {
+		left: 70%;
+	}
+}
+@-o-keyframes move {
+	to {
+		left: 70%;
+	}
+}
+@-ms-keyframes move {
+	to {
+		left: 70%;
+	}
+}
+@keyframes move {
+	to {
+		left: 70%;
+	}
+}
