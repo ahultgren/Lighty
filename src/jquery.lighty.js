@@ -15,7 +15,6 @@
 	// Private vars
 	var settings = {
 			baseZ: 5,
-			bgColor: 'rgba(0,0,0,0.85)',
 			data: function(){
 				return {
 					jsonposts: 1
@@ -97,7 +96,6 @@
 			bg = $(document.createElement('div'))
 				.attr('id', settings.prefix + 'bg')
 				.css({
-					background: settings.bgColor,
 					position: 'fixed',
 					top: 0,
 					left: 0,
