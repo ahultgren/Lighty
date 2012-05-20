@@ -33,15 +33,21 @@
 			}
 		},
 		bg,
-		container;
+		container,
+		current,
+		selector;
 
 	// Private methods
 	var showLightbox = function(){
 		var that = $(this);
 
+		// Save this as currently lightboxed
+		current = that;
+
 		// Show bg and loading icon
 		bg.show();
 		container
+			.empty()
 			.append('<div class="' + settings.prefix + 'waiter"></div>')
 			.css({
 				top: that.offset().top - $(window).scrollTop,
@@ -76,11 +82,14 @@
 	hideLightbox = function(){
 		bg.hide();
 		container.hide().empty();
+		current = undefined;
 	};
 
 	// Public methods
 	var methods = {
 		init: function(options){
+			selector = this;
+
 			// Extend default settings
 			$.extend(settings, options);
 
@@ -97,7 +106,10 @@
 					'z-index': settings.baseZ
 				})
 				.hide()
-				.appendTo('body');
+				.appendTo('body')
+				.click(function(){
+					hideLightbox();
+				});
 
 			// Prepare lightbox container
 			container = $(document.createElement('div'))
@@ -111,11 +123,29 @@
 				.hide()
 				.appendTo('body');
 
-			// Prepare eventhandlers
-			bg.click(function(){
-				hideLightbox();
+			// Pressing right and left keys
+			$(window).keydown(function(e){
+				var newBox;
+
+				if( current ){
+					if( e.which === 39 ){
+						// Right
+						newBox = selector[selector.index(current)+1];
+					}
+					else if( e.which === 37 ){
+						// Left
+						newBox = selector[selector.index(current)-1];
+					}
+
+					if( newBox ){
+						showLightbox.call(newBox);
+					}
+					else if( !newBox || e.which === 27 ){
+						// Escape
+						hideLightbox();
+					}
+				}
 			});
-			//## pressing right and left keys?
 
 			// Prepare each lightboxed item
 			return this.each(function(){
