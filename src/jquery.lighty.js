@@ -128,18 +128,20 @@
 				if( current ){
 					if( e.which === 39 ){
 						// Right
+						e.preventDefault();
 						newBox = selector[selector.index(current)+1];
 					}
 					else if( e.which === 37 ){
 						// Left
+						e.preventDefault();
 						newBox = selector[selector.index(current)-1];
 					}
 
 					if( newBox ){
 						showLightbox.call(newBox);
 					}
-					else if( !newBox || e.which === 27 ){
-						// Escape
+					else if( (!newBox && (e.which === 39 || e.which === 37)) || e.which === 27 ){
+						// 		not new AND 	right or left key 		OR 	Escape
 						hideLightbox();
 					}
 				}
