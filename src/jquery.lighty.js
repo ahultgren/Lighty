@@ -12,81 +12,82 @@
   */
 
 (function($) {
-	// Private vars
-	var settings = {
-			baseZ: 5,
-			data: function(){
-				return {
-					jsonposts: 1
-				};
+	// Class
+	function Lighty(){
+		// Private vars
+		var settings = {
+				baseZ: 5,
+				data: function(){
+					return {
+						jsonposts: 1
+					};
+				},
+				prefix: 'lighty-',
+				itemTemplate: function(data){
+					var contents = '<img src="' + data[0].the_post_thumbnail[0] + '" />' + '<p class="desc">' + data[0].the_excerpt + '</p>';
+					
+					return {
+						markup: contents,
+						width: data[0].the_post_thumbnail[1],
+						height: data[0].the_post_thumbnail[2]
+					};
+				}
 			},
-			prefix: 'lighty-',
-			itemTemplate: function(data){
-				var contents = '<img src="' + data[0].the_post_thumbnail[0] + '" />' + '<p class="desc">' + data[0].the_excerpt + '</p>';
-				
-				return {
-					markup: contents,
-					width: data[0].the_post_thumbnail[1],
-					height: data[0].the_post_thumbnail[2]
-				};
-			}
+			bg,
+			container,
+			current,
+			selector;
+
+		// Private methods
+		var showLightbox = function(){
+			var that = $(this);
+
+			// Save this as currently lightboxed
+			current = that;
+
+			// Show bg and loading icon
+			bg.show();
+			container
+				.empty()
+				.append('<div class="' + settings.prefix + 'waiter"></div>')
+				.css({
+					top: that.offset().top - $(window).scrollTop,
+					left: that.offset().left,
+					width: that.width(),
+					height: that.height()
+				})
+				.show();
+
+			// Get data
+			$.ajax({
+				url: that.attr('href'),
+				data: settings.data.call(that),
+				dataType: 'json',
+				error: function(xhr, text){
+					//## errorTemplate?
+				},
+				success: function(data){
+					// Input the fetched data into template
+					var content = settings.itemTemplate.call(this, data);
+
+					// Resize the container
+					container.lighty('resize', {width: content.width, height: content.height}, function(){
+						// Swap from loader to content
+						container.empty().append(content.markup);
+					});
+				}
+			});
+
+			return this;
 		},
-		bg,
-		container,
-		current,
-		selector;
+		hideLightbox = function(){
+			bg.hide();
+			container.hide().empty();
+			current = undefined;
+		};
 
-	// Private methods
-	var showLightbox = function(){
-		var that = $(this);
-
-		// Save this as currently lightboxed
-		current = that;
-
-		// Show bg and loading icon
-		bg.show();
-		container
-			.empty()
-			.append('<div class="' + settings.prefix + 'waiter"></div>')
-			.css({
-				top: that.offset().top - $(window).scrollTop,
-				left: that.offset().left,
-				width: that.width(),
-				height: that.height()
-			})
-			.show();
-
-		// Get data
-		$.ajax({
-			url: that.attr('href'),
-			data: settings.data.call(that),
-			dataType: 'json',
-			error: function(xhr, text){
-				//## errorTemplate?
-			},
-			success: function(data){
-				// Input the fetched data into template
-				var content = settings.itemTemplate.call(this, data);
-
-				// Resize the container
-				container.lighty('resize', {width: content.width, height: content.height}, function(){
-					// Swap from loader to content
-					container.empty().append(content.markup);
-				});
-			}
-		});
-
-		return this;
-	},
-	hideLightbox = function(){
-		bg.hide();
-		container.hide().empty();
-		current = undefined;
-	};
-
-	// Public methods
-	var methods = {
-		init: function(options){
+		// Public methods
+		this.init = function(options){
 			selector = this;
 
 			// Extend default settings
@@ -141,7 +142,7 @@
 						showLightbox.call(newBox);
 					}
 					else if( (!newBox && (e.which === 39 || e.which === 37)) || e.which === 27 ){
-						// 		not new AND 	right or left key 		OR 	Escape
+						//    not new  AND      right or left key           OR Escape
 						hideLightbox();
 					}
 				}
@@ -154,8 +155,9 @@
 					showLightbox.call(this);
 				});
 			});
-		},
-		resize: function(args, callback){
+		};
+
+		this.resize = function(args, callback){
 			return this.each(function(){
 				var $window = $(window),
 					windowWidth = $window.width(),
@@ -198,19 +200,21 @@
 					}
 				});
 			});
-		}
-	};
+		};
+	}
 
 	// Make things accessible
 	$.fn.lighty = function(method) {
 		// Don't act on absent elements
 		if( this.length ){
 			// Method calling logic
-			if( methods[method] ){
-				return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
+			var lighty = new Lighty();
+
+			if( lighty[method] ){
+				return lighty[method].apply(this, Array.prototype.slice.call(arguments, 1));
 			}
-			else if( typeof method === 'object' || ! method ){
-				return methods.init.apply(this, arguments);
+			else if( typeof method === 'object' || !method ){
+				return lighty.init.apply(this, arguments);
 			} 
 			else {
 				$.error('Method ' +  method + ' does not exist on jQuery.lighty');
