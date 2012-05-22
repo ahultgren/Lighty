@@ -203,15 +203,18 @@
 
 	// Make things accessible
 	$.fn.lighty = function(method) {
-		// Method calling logic
-		if( methods[method] ){
-			return methods[ method ].apply( this, Array.prototype.slice.call( arguments, 1 ));
-		}
-		else if( typeof method === 'object' || ! method ){
-			return methods.init.apply( this, arguments );
-		} 
-		else {
-			$.error( 'Method ' +  method + ' does not exist on jQuery.lighty' );
+		// Don't act on absent elements
+		if( this.length ){
+			// Method calling logic
+			if( methods[method] ){
+				return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
+			}
+			else if( typeof method === 'object' || ! method ){
+				return methods.init.apply(this, arguments);
+			} 
+			else {
+				$.error('Method ' +  method + ' does not exist on jQuery.lighty');
+			}
 		}
 	};
 }(jQuery));
