@@ -162,14 +162,15 @@
 				var $window = $(window),
 					windowWidth = $window.width(),
 					windowHeight = $window.height(),
+					that = $(this),
 					diff;
 
 				// Make sure args is an object
 				args = args || {};
 
 				// Make sure there's something to animate to
-				args.height = args.height || $(this).height();
-				args.width = args.width || $(this).width();
+				args.height = args.height || that.height();
+				args.width = args.width || that.width();
 
 				// Make sure the image is never larger than the screen
 				//## Must compensate for padding and shit...
@@ -185,7 +186,7 @@
 				}
 
 				// Animate to the center
-				$(this).animate({
+				that.animate({
 					width: args.width,
 					height: args.height,
 					left: windowWidth/2 - args.width/2,
@@ -194,6 +195,7 @@
 				{
 					duration: 200,
 					complete: function(){
+						that.height("auto");
 						if( typeof callback === 'function' ){
 							callback();
 						}
