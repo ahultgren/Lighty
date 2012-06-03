@@ -31,6 +31,24 @@
 						width: data[0].the_post_thumbnail[1],
 						height: data[0].the_post_thumbnail[2]
 					};
+				},
+				load: function( container, bg ){
+					var that = this;
+					
+					// Show bg and loading icon
+					bg.show();
+					container
+						.empty()
+						.append('<div class="' + settings.prefix + 'waiter"></div>')
+						.css({
+							top: that.offset().top - $(window).scrollTop,
+							left: that.offset().left,
+							width: that.width(),
+							height: that.height()
+						})
+						.show();
+
+					return that;
 				}
 			},
 			bg,
@@ -45,18 +63,8 @@
 			// Save this as currently lightboxed
 			current = that;
 
-			// Show bg and loading icon
-			bg.show();
-			container
-				.empty()
-				.append('<div class="' + settings.prefix + 'waiter"></div>')
-				.css({
-					top: that.offset().top - $(window).scrollTop,
-					left: that.offset().left,
-					width: that.width(),
-					height: that.height()
-				})
-				.show();
+			// Hint that something is loading
+			settings.load.call(that, container, bg);
 
 			// Get data
 			$.ajax({
