@@ -15,7 +15,7 @@
 	// Class
 	function Lighty(){
 		// Private vars
-		var settings = {
+		this.settings = {
 				baseZ: 5,
 				data: function(){
 					return {
@@ -23,7 +23,7 @@
 					};
 				},
 				prefix: 'lighty-',
-				itemTemplate: function(data){
+				itemTemplate: function(data, bg){
 					var contents = '<img src="' + data[0].the_post_thumbnail[0] + '" />' + '<p class="desc">' + data[0].the_excerpt + '</p>';
 					
 					return {
@@ -32,9 +32,9 @@
 						height: data[0].the_post_thumbnail[2]
 					};
 				},
-				load: function( container, bg ){
+				load: function(container, bg){
 					var that = this;
-					
+
 					// Show bg and loading icon
 					bg.show();
 					container
@@ -50,7 +50,9 @@
 
 					return that;
 				}
-			},
+			};
+
+		var settings = this.settings,
 			bg,
 			container,
 			current,
@@ -76,7 +78,7 @@
 				},
 				success: function(data){
 					// Input the fetched data into template
-					var content = settings.itemTemplate.call(this, data);
+					var content = settings.itemTemplate.call(this, data, bg);
 
 					// Resize the container
 					container.lighty('resize', {width: content.width, height: content.height}, function(){
