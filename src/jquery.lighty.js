@@ -41,7 +41,7 @@
 						.empty()
 						.append('<div class="' + settings.prefix + 'waiter"></div>')
 						.css({
-							top: that.offset().top - $(window).scrollTop,
+							top: that.offset().top - $(window).scrollTop(),
 							left: that.offset().left,
 							width: that.width(),
 							height: that.height()
