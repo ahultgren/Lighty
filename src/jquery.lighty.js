@@ -41,7 +41,7 @@
 						.empty()
 						.append('<div class="' + settings.prefix + 'waiter"></div>')
 						.css({
-							top: that.offset().top - $(window).scrollTop(),
+							top: that.offset().top,
 							left: that.offset().left,
 							width: that.width(),
 							height: that.height()
@@ -81,7 +81,7 @@
 					var content = settings.itemTemplate.call(this, data, bg);
 
 					// Resize the container
-					container.lighty('resize', {width: content.width, height: content.height}, function(){
+					container.lighty('resize', content, function(){
 						// Swap from loader to content
 						container.empty().append(content.markup);
 					});
@@ -124,9 +124,9 @@
 			container = $(document.createElement('div'))
 				.attr('id', settings.prefix + 'container')
 				.css({
-					position: 'fixed',
-					left: $(window).width()/2,
-					top: $(window).height()/2,
+					position: 'absolute',
+					left: $(window).width() / 2,
+					top: $(window).scrollTop() + $(window).height() / 2,
 					'z-index': settings.baseZ + 1
 				})
 				.hide()
@@ -172,6 +172,7 @@
 				var $window = $(window),
 					windowWidth = $window.width(),
 					windowHeight = $window.height(),
+					windowOffset = $window.scrollTop(),
 					that = $(this),
 					diff;
 
@@ -181,18 +182,20 @@
 				// Make sure there's something to animate to
 				args.height = args.height || that.height();
 				args.width = args.width || that.width();
-
+console.log(args.scale);
 				// Make sure the image is never larger than the screen
-				//## Must compensate for padding and shit...
-				if( args.width > windowWidth - 50 ){
-					diff = (windowWidth - 50) / args.width;
-					args.width *= diff;
-					args.height *= diff;
-				}
-				if( args.height > windowHeight - 100 ){
-					diff = (windowHeight - 100) / args.height;
-					args.width *= diff;
-					args.height *= diff;
+				if( args.scale !== false ){
+					//## Must compensate for padding and shit...
+					if( args.width > windowWidth - 50 ){
+						diff = (windowWidth - 50) / args.width;
+						args.width *= diff;
+						args.height *= diff;
+					}
+					if( args.height > windowHeight - 100 ){
+						diff = (windowHeight - 100) / args.height;
+						args.width *= diff;
+						args.height *= diff;
+					}
 				}
 
 				// Animate to the center
@@ -200,7 +203,7 @@
 					width: args.width,
 					height: args.height,
 					left: windowWidth/2 - args.width/2,
-					top: windowHeight/2 - args.height/2
+					top: windowOffset + windowHeight/2 - args.height/2
 				},
 				{
 					duration: 200,
